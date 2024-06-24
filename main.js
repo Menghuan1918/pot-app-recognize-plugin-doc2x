@@ -23,15 +23,20 @@ async function recognize(base64, lang, options) {
             "Authorization": `Bearer ${apikey}`
         },
     });
-
+    let renewkey = "";
     if (key.ok) {
-        renewkey = key.data.token;
+        try {
+            renewkey = key.data.refresh_token;
+        }
+        catch (error) {
+            throw Error(`Error: ${error}: ${JSON.stringify(key)}`)
+        }
     } else {
         throw Error(JSON.stringify(key));
     }
 
     // Upload image and get uuid
-    let uuid = await tauriFetch(`${Base_URL}/platform/async/img`, {
+    let uuid_data = await tauriFetch(`${Base_URL}/platform/async/img`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${renewkey}`,
@@ -45,11 +50,16 @@ async function recognize(base64, lang, options) {
         },
     }
     );
-
-    if (uuid.ok) {
-        uuid = uuid.data["uuid"];
+    let uuid = "";
+    if (uuid_data.ok) {
+        try {
+            uuid = uuid_data.data.uuid;
+        }
+        catch (error) {
+            throw Error(`Error: ${error}: ${JSON.stringify(uuid_data)}`)
+        }
     } else {
-        throw Error(JSON.stringify(uuid));
+        throw Error(JSON.stringify(uuid_data));
     }
 
     // A loop waiting for the result
