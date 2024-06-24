@@ -5,7 +5,7 @@ async function recognize(base64, lang, options) {
     base64 = `data:image/png;base64,${base64}`;
 
     if (apikey === undefined || apikey.length === 0) {
-        throw "apikey not found";
+        throw Error("apikey not found");
     }
     if (formula === undefined || formula.length === 0) {
         formula = "0";
@@ -20,23 +20,21 @@ async function recognize(base64, lang, options) {
     let key = await tauriFetch(`${Base_URL}/token/refresh`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${apikey}`
         },
     });
 
     if (key.ok) {
-        key = key.data["token"];
+        renewkey = key.data.token;
     } else {
-        throw JSON.stringify(key);
+        throw Error(JSON.stringify(key));
     }
 
     // Upload image and get uuid
     let uuid = await tauriFetch(`${Base_URL}/platform/async/img`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${key}`,
+            "Authorization": `Bearer ${renewkey}`,
         },
         files: {
             "file": base64,
@@ -51,7 +49,7 @@ async function recognize(base64, lang, options) {
     if (uuid.ok) {
         uuid = uuid.data["uuid"];
     } else {
-        throw JSON.stringify(uuid);
+        throw Error(JSON.stringify(uuid));
     }
 
     // A loop waiting for the result
@@ -59,8 +57,7 @@ async function recognize(base64, lang, options) {
         let res = await tauriFetch(`${Base_URL}/platform/async/status?uuid=${uuid}`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${key}`
+                "Authorization": `Bearer ${renewkey}`
             }
         });
 
@@ -80,12 +77,12 @@ async function recognize(base64, lang, options) {
             } else if (status === "processing" || status === "ready") {
                 await new Promise(resolve => setTimeout(resolve, 1000));
             } else if (status === "pages limit exceeded") {
-                throw JSON.stringify("pages limit exceeded");
+                throw Error(JSON.stringify("pages limit exceeded"));
             } else {
-                throw JSON.stringify(res.data);
+                throw Error(JSON.stringify(res.data));
             }
         } else {
-            throw JSON.stringify(res);
+            throw Error(JSON.stringify(res));
         }
     }
 }
