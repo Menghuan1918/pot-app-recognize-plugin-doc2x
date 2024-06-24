@@ -15,7 +15,7 @@ async function recognize(base64, lang, options) {
     }
 
     let Base_URL = "https://api.doc2x.noedgeai.com/api";
-    print("Get key");
+
     // Refresh key first
     let key = await tauriFetch(`${Base_URL}/refresh`, {
         method: "POST",
@@ -27,10 +27,11 @@ async function recognize(base64, lang, options) {
 
     if (key.ok) {
         key = key.data.token;
+        throw JSON.stringify(key);
     } else {
         throw JSON.stringify(key);
     }
-    print("Upload image");
+
     // Upload image and get uuid
     let uuid = await tauriFetch(`${Base_URL}/platform/async/img`, {
         method: "POST",
@@ -52,7 +53,7 @@ async function recognize(base64, lang, options) {
     } else {
         throw JSON.stringify(uuid);
     }
-    print("Get result");
+
     // A loop waiting for the result
     while (true) {
         let res = await tauriFetch(`${Base_URL}/platform/async/status?uuid=${uuid}`, {
