@@ -1,7 +1,7 @@
 async function recognize(base64, lang, options) {
     const { config, utils } = options;
     const { tauriFetch } = utils;
-    let { apikey, formula, img_correction } = config;
+    let { formula, img_correction, apikey } = config;
     base64 = `data:image/png;base64,${base64}`;
 
     if (apikey === undefined || apikey.length === 0) {
@@ -17,7 +17,7 @@ async function recognize(base64, lang, options) {
     let Base_URL = "https://api.doc2x.noedgeai.com/api";
 
     // Refresh key first
-    let key = await tauriFetch(`${Base_URL}/refresh`, {
+    let key = await tauriFetch(`${Base_URL}/token/refresh`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -26,8 +26,7 @@ async function recognize(base64, lang, options) {
     });
 
     if (key.ok) {
-        key = key.data.token;
-        throw JSON.stringify(key);
+        key = key.data["token"];
     } else {
         throw JSON.stringify(key);
     }
@@ -35,21 +34,22 @@ async function recognize(base64, lang, options) {
     // Upload image and get uuid
     let uuid = await tauriFetch(`${Base_URL}/platform/async/img`, {
         method: "POST",
-        header: {
+        headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${key}`,
         },
-        body: {
-            file: base64,
-            data: {
-                "option": formula,
-                "img_correction": img_correction
-            }
-        }
-    });
+        files: {
+            "file": base64,
+        },
+        data: {
+            "option": formula,
+            "img_correction": img_correction
+        },
+    }
+    );
 
     if (uuid.ok) {
-        uuid = uuid.data.uuid;
+        uuid = uuid.data["uuid"];
     } else {
         throw JSON.stringify(uuid);
     }
@@ -58,7 +58,7 @@ async function recognize(base64, lang, options) {
     while (true) {
         let res = await tauriFetch(`${Base_URL}/platform/async/status?uuid=${uuid}`, {
             method: "GET",
-            header: {
+            headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${key}`
             }
@@ -69,9 +69,9 @@ async function recognize(base64, lang, options) {
             print(status);
             if (status === "success") {
                 let text = "";
-                for (const data of status.pages) {
+                for (const data of status["pages"]) {
                     try {
-                        text += data.md;
+                        text += data["md"];
                     } catch (error) {
                         continue;
                     }

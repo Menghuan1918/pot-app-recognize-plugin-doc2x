@@ -9,15 +9,25 @@
       "key": "formula",
       "display": "纯公式模式(默认关闭)",
       "type": "select",
-      "options": { "0": "OFF", "1": "ON"}
+      "options": {
+        "0": "OFF",
+        "1": "ON"
+      }
     },
     {
       "key": "img_correction",
       "display": "图片校正(默认开启)",
       "type": "select",
-      "options": { "0": "OFF", "1": "ON"}
+      "options": {
+        "1": "ON",
+        "0": "OFF"
+      }
     },
-    { "key": "apikey", "display": "Api Key", "type": "input" }
+    {
+      "key": "apikey",
+      "display": "Api Key",
+      "type": "input"
+    }
   ],
   "language": {
     "auto": "auto"
