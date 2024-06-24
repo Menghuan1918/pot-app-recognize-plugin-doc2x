@@ -19,7 +19,7 @@ async function recognize(base64, lang, options) {
     // Refresh key first
     let key = await tauriFetch(`${Base_URL}/refresh`, {
         method: "POST",
-        header: {
+        headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${apikey}`
         },
@@ -84,6 +84,8 @@ async function recognize(base64, lang, options) {
             } else {
                 throw JSON.stringify(res.data);
             }
+        } else {
+            throw JSON.stringify(res);
         }
     }
 }
