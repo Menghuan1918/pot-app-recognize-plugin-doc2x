@@ -1,37 +1,25 @@
 {
-  "id": "plugin.com.pot-app.ocrspace",
+  "id": "plugin.com.pot-app.doc2x",
   "plugin_type": "recognize",
   "icon": "icon.png",
-  "display": "OCR Space",
-  "homepage": "https://github.com/pot-app/pot-app-recognize-plugin-template",
+  "display": "Doc2X",
+  "homepage": "https://github.com/Menghuan1918/pot-app-recognize-plugin-doc2x",
   "needs": [
     {
-      "key": "engine",
-      "display": "Engine",
+      "key": "formula",
+      "display": "纯公式模式(默认关闭)",
       "type": "select",
-      "options": { "1": "Engine 1", "2": "Engine 2", "3": "Engine 3" }
+      "options": { "0": "OFF", "1": "ON"}
+    },
+    {
+      "key": "img_correction",
+      "display": "图片校正(默认开启)",
+      "type": "select",
+      "options": { "0": "OFF", "1": "ON"}
     },
     { "key": "apikey", "display": "Api Key", "type": "input" }
   ],
   "language": {
-    "auto": "eng",
-    "zh_cn": "chs",
-    "zh_tw": "cht",
-    "en": "eng",
-    "ja": "jpn",
-    "ko": "kor",
-    "fr": "fre",
-    "es": "spa",
-    "ru": "rus",
-    "de": "ger",
-    "it": "ita",
-    "tr": "tur",
-    "pt_pt": "por",
-    "pt_br": "por",
-    "vi": "vie",
-    "th": "tai",
-    "ar": "ara",
-    "hi": "hin",
-    "fa": "per"
+    "auto": "auto"
   }
 }
