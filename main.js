@@ -55,7 +55,9 @@ async function recognize(base64, lang, options) {
                     file: fileContent,
                     mime: 'image/png',
                     fileName: 'pot_screenshot_cut.png',
-                }
+                },
+                img_correction: img_correction,
+                equation: formula,
             }
         )
     }
@@ -86,17 +88,10 @@ async function recognize(base64, lang, options) {
         });
 
         if (res.ok) {
-            const { status } = res.data.data;
-            print(status);
+            const status = res.data.data.status;
             if (status === "success") {
                 let text = "";
-                for (const data of status.pages) {
-                    try {
-                        text += data.md;
-                    } catch (error) {
-                        continue;
-                    }
-                }
+                text = res.data.data.result.pages[0].md;
                 return text;
             } else if (status === "processing" || status === "ready") {
                 await new Promise(resolve => setTimeout(resolve, 1000));
