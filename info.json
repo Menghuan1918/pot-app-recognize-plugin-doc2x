@@ -7,7 +7,7 @@
   "needs": [
     {
       "key": "formula",
-      "display": "纯公式模式(默认关闭)",
+      "display": "纯公式模式",
       "type": "select",
       "options": {
         "0": "OFF",
@@ -16,11 +16,11 @@
     },
     {
       "key": "img_correction",
-      "display": "图片校正(默认开启)",
+      "display": "图片校正",
       "type": "select",
       "options": {
-        "1": "ON",
-        "0": "OFF"
+        "0": "OFF",
+        "1": "ON"
       }
     },
     {

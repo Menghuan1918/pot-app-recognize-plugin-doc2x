@@ -4,14 +4,14 @@ async function recognize(base64, lang, options) {
     let { formula, img_correction, apikey } = config;
     base64 = `data:image/png;base64,${base64}`;
 
-    if (apikey === undefined || apikey.length === 0) {
+    if (apikey === undefined || apikey.length === 0 || apikey === "") {
         throw Error("apikey not found");
     }
     if (formula === undefined || formula.length === 0) {
         formula = "0";
     }
     if (img_correction === undefined || img_correction.length === 0) {
-        img_correction = "1";
+        img_correction = "0";
     }
 
     let Base_URL = "https://api.doc2x.noedgeai.com/api";
@@ -24,6 +24,7 @@ async function recognize(base64, lang, options) {
         },
     });
     let renewkey = "";
+    
     if (key.ok) {
         try {
             renewkey = key.data.refresh_token;
@@ -35,19 +36,22 @@ async function recognize(base64, lang, options) {
         throw Error(JSON.stringify(key));
     }
 
+    if (renewkey === "") {
+        throw Error("renewkey not found");
+    }
+    const data = {
+        "file": base64,
+        "option": formula,
+        "img_correction": img_correction
+    };
+
     // Upload image and get uuid
     let uuid_data = await tauriFetch(`${Base_URL}/platform/async/img`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${renewkey}`,
         },
-        files: {
-            "file": base64,
-        },
-        data: {
-            "option": formula,
-            "img_correction": img_correction
-        },
+        body: JSON.stringify(data)
     }
     );
     let uuid = "";
@@ -61,6 +65,10 @@ async function recognize(base64, lang, options) {
     } else {
         throw Error(JSON.stringify(uuid_data));
     }
+    if (uuid === "") {
+        throw Error("uuid not found");
+    }
+
 
     // A loop waiting for the result
     while (true) {
