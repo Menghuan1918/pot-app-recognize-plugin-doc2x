@@ -1,6 +1,6 @@
 async function recognize(base64, lang, options) {
     const { config, utils } = options;
-    const { tauriFetch, cacheDir, readBinaryFile } = utils;
+    const { tauriFetch, cacheDir, readBinaryFile, http } = utils;
     let { formula, img_correction, apikey } = config;
 
     if (apikey === undefined || apikey.length === 0 || apikey === "") {
@@ -38,22 +38,26 @@ async function recognize(base64, lang, options) {
     if (renewkey === "" || renewkey === undefined) {
         throw Error("renewkey not found");
     }
-    let file_path = `${cacheDir}/pot_screenshot_cut.png`;
-    let file = await readBinaryFile('pot_screenshot_cut.png', { dir: file_path });
-    Datas.append("file", file);
-    Datas.append("option", formula);
-    Datas.append("img_correction", img_correction);
+
+    let file_path = `${cacheDir}pot_screenshot_cut.png`;
+    let fileContent = await readBinaryFile(file_path);
 
     // Upload image and get uuid
     let uuid_data = await tauriFetch(`${Base_URL}/platform/async/img`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${renewkey}`,
+            'content-type': 'multipart/form-data',
         },
-        body: {
-            type: "Form",
-            payload: Datas
-        }
+        body: http.Body.form(
+            {
+                file: {
+                    file: fileContent,
+                    mime: 'image/png',
+                    fileName: 'pot_screenshot_cut.png',
+                }
+            }
+        )
     }
     );
     let uuid = "";
