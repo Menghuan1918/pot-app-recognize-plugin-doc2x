@@ -14,9 +14,6 @@
 
 由于使用了新的插件系统接口，需要[Pot App](https://github.com/pot-app/pot-desktop)版本`3.0.3`以及以上
 
-> [!NOTE]
-> 截止6/25还未发布此版本，测试使用的是由Action自动构建的git版本
-
 前往[https://doc2x.noedgeai.com/](https://doc2x.noedgeai.com/)，点击身份信息，复制你的身份令牌作为api即可
 
 1. 前往右侧[releases](https://github.com/Menghuan1918/pot-app-recognize-plugin-doc2x/releases)下载最新的 `.potext` 文件
