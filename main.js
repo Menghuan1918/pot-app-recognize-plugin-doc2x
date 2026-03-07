@@ -23369,9 +23369,12 @@ async function recognize(base64, lang, options) {
     }
   }
 
+  // // 调试输出
+  // console.log('Upload response:', uploadData);
+
   // 检查响应格式
   if (uploadData.code !== "success") {
-    throw new Error(`上传失败: ${uploadData.message || "未知错误"}`);
+    throw new Error(`上传失败: ${uploadData.message || "未知错误"}。调试信息: ${JSON.stringify(uploadData)}`);
   }
 
   // 验证响应数据结构
